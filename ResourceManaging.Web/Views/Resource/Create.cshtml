@@ -1,0 +1,30 @@
+@model CreateResourceViewModel
+
+@{
+    ViewData["Title"] = "Create Resource";
+}
+
+<h2>Create Resource</h2>
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ResourceTypeId" class="form-label">Resource Type</label>
+        <select asp-for="ResourceTypeId" class="form-select" asp-items="@(new SelectList(Model.ResourceTypes, "ResourceTypeId", "Name"))"></select>
+        <span asp-validation-for="ResourceTypeId" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Capacity" class="form-label"></label>
+        <input asp-for="Capacity" class="form-control" />
+        <span asp-validation-for="Capacity" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,88 @@
+@model CreateReservationViewModel
+
+@{
+    ViewData["Title"] = "Create Reservation";
+}
+
+<h2>Create Reservation</h2>
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData["ErrorMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="StartTime" class="form-label"></label>
+        <input asp-for="StartTime" class="form-control" type="datetime-local" />
+        <span asp-validation-for="StartTime" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="EndTime" class="form-label"></label>
+        <input asp-for="EndTime" class="form-control" type="datetime-local" />
+        <span asp-validation-for="EndTime" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Purpose" class="form-label"></label>
+        <input asp-for="Purpose" class="form-control" />
+        <span asp-validation-for="Purpose" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Participants" class="form-label"></label>
+        <input asp-for="Participants" class="form-control" />
+        <span asp-validation-for="Participants" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Resources</label>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    @foreach (var resource in Model.AvailableResources)
+                    {
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="form-check">
+                                        <input type="checkbox" 
+                                               name="SelectedResourceIds" 
+                                               value="@resource.ResourceId" 
+                                               class="form-check-input" 
+                                               id="resource_@resource.ResourceId"
+                                               @(Model.SelectedResourceIds != null && Model.SelectedResourceIds.Contains(resource.ResourceId) ? "checked" : "") />
+                                        <label class="form-check-label" for="resource_@resource.ResourceId">
+                                            <h6 class="mb-1">@resource.Name</h6>
+                                            <small class="text-muted">
+                                                <i class="bi bi-people-fill"></i> Capacity: @resource.Capacity
+                                            </small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <span asp-validation-for="SelectedResourceIds" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

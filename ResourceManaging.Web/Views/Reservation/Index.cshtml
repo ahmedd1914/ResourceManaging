@@ -1,0 +1,71 @@
+@model ReservationListViewModel
+
+@{
+    ViewData["Title"] = "Reservations";
+}
+
+<h2>Reservations</h2>
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData["ErrorMessage"]
+    </div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}   
+
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Create Reservation
+    </a>
+</div>
+
+<div class="row">
+    @foreach (var res in Model.Reservations)
+    {
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Reservation #@res.ReservationId</h5>
+                    <span class="badge @(res.IsCancelled ? "bg-danger" : (res.EndTime < DateTime.Now ? "bg-secondary" : "bg-success"))">
+                        @(res.IsCancelled ? "Cancelled" : (res.EndTime < DateTime.Now ? "Completed" : "Active"))
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <i class="bi bi-clock"></i> 
+                        <strong>Time:</strong> @res.StartTime.ToString("g") - @res.EndTime.ToString("g")
+                    </div>
+                    <div class="mb-2">
+                        <i class="bi bi-person"></i> 
+                        <strong>Participants:</strong> @res.Participants
+                    </div>
+                    <div class="mb-2">
+                        <i class="bi bi-box"></i> 
+                        <strong>Resources:</strong> @res.ResourceIds.Count
+                    </div>
+                    <div class="mb-2">
+                        <i class="bi bi-chat-text"></i> 
+                        <strong>Purpose:</strong> @res.Purpose
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="btn-group w-100">
+                        <a asp-action="Details" asp-route-id="@res.ReservationId" class="btn btn-info">
+                            <i class="bi bi-info-circle"></i> Details
+                        </a>
+                        <a asp-action="Edit" asp-route-id="@res.ReservationId" class="btn btn-primary">
+                            <i class="bi bi-pencil"></i> Edit
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,39 @@
+@model ResourceListViewModel
+
+@{
+    ViewData["Title"] = "Resource";
+}
+
+<h2>Resources</h2>
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Create Resource
+    </a>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Capacity</th>
+            <th>Active</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var res in Model.Resources)
+    {
+        <tr>
+            <td>@res.Name</td>
+            <td>@res.ResourceTypeName</td>
+            <td>@res.Capacity</td>
+            <td>@(res.IsActive ? "Yes" : "No")</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@res.ResourceId" class="btn btn-info btn-sm">Details</a>
+                <a asp-action="Edit" asp-route-id="@res.ResourceId" class="btn btn-primary btn-sm">Edit</a>
+                <a asp-controller="Reservation" asp-action="Create" asp-route-resourceId="@res.ResourceId" class="btn btn-success btn-sm">Reserve</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

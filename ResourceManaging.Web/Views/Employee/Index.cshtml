@@ -1,0 +1,38 @@
+@model ResourceManaging.Web.Models.ViewModels.Employee.EmployeeListViewModel
+
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<h2>Employees</h2>
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Create Employee
+    </a>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Birth Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var emp in Model.Employees)
+    {
+        <tr>
+            <td>@emp.FullName</td>
+            <td>@emp.Username</td>
+            <td>@emp.Email</td>
+            <td>@emp.BirthDate.ToShortDateString()</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@emp.EmployeeId" class="btn btn-info btn-sm">Details</a>
+                <a asp-action="Edit" asp-route-id="@emp.EmployeeId" class="btn btn-primary btn-sm">Edit</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,97 @@
+@model ReservationDetailsViewModel
+
+@{
+    ViewData["Title"] = "Reservation Details";
+}
+
+<h2>Reservation Details</h2>
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData["ErrorMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="mb-0">Reservation #@Model.ReservationId</h3>
+        <span class="badge @(Model.IsCancelled ? "bg-danger" : "bg-success")">
+            @(Model.IsCancelled ? "Cancelled" : "Active")
+        </span>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <h5><i class="bi bi-clock"></i> Time Details</h5>
+                    <p class="mb-1"><strong>Start:</strong> @Model.StartTime.ToString("g")</p>
+                    <p class="mb-1"><strong>End:</strong> @Model.EndTime.ToString("g")</p>
+                    <p class="mb-1"><strong>Created:</strong> @Model.CreatedAt.ToString("g")</p>
+                </div>
+                <div class="mb-3">
+                    <h5><i class="bi bi-person"></i> Reservation Details</h5>
+                    <p class="mb-1"><strong>Participants:</strong> @Model.Participants</p>
+                    <p class="mb-1"><strong>Purpose:</strong> @Model.Purpose</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <h5><i class="bi bi-box"></i> Resources</h5>
+                    @if (Model.Resources != null && Model.Resources.Any())
+                    {
+                        <div class="row">
+                            @foreach (var resource in Model.Resources)
+                            {
+                                <div class="col-md-6 mb-2">
+                                    <div class="card">
+                                        <div class="card-body p-2">
+                                            <h6 class="mb-1">@resource.Name</h6>
+                                            <small class="text-muted">
+                                                <i class="bi bi-people-fill"></i> Capacity: @resource.Capacity
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No resources assigned</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="btn-group">
+            <a asp-action="Edit" asp-route-id="@Model.ReservationId" class="btn btn-primary">
+                <i class="bi bi-pencil"></i> Edit
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+            @if (!Model.IsCancelled && Model.EndTime > DateTime.Now)
+            {
+                <form asp-action="ReleaseEarly" asp-route-id="@Model.ReservationId" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to release this reservation early?')">
+                        <i class="bi bi-box-arrow-right"></i> Release Early
+                    </button>
+                </form>
+            }
+        </div>
+    </div>
+</div>

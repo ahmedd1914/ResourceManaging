@@ -1,0 +1,24 @@
+@model ResourceManaging.Web.Models.ViewModels.Resource.ResourceDetailsViewModel
+
+@{
+    ViewData["Title"] = "Resource Details";
+}
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h3>@Model.Name</h3>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Type</dt>
+            <dd class="col-sm-9">@Model.ResourceType?.Name</dd>
+            <dt class="col-sm-3">Capacity</dt>
+            <dd class="col-sm-9">@Model.Capacity</dd>
+            <dt class="col-sm-3">Active</dt>
+            <dd class="col-sm-9">@(Model.IsActive ? "Yes" : "No")</dd>
+        </dl>
+        <a asp-action="Edit" asp-route-id="@Model.ResourceId" class="btn btn-primary">Edit</a>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        <a asp-controller="Reservation" asp-action="Create" asp-route-resourceId="@Model.ResourceId" class="btn btn-success">Reserve</a>
+    </div>
+</div>

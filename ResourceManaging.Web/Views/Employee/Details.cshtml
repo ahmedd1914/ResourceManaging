@@ -1,0 +1,23 @@
+@model ResourceManaging.Web.Models.ViewModels.Employee.EmployeeViewModel
+
+@{
+    ViewData["Title"] = "Employee Details";
+}
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h3>@Model.FullName</h3>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Username</dt>
+            <dd class="col-sm-9">@Model.Username</dd>
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9">@Model.Email</dd>
+            <dt class="col-sm-3">Birth Date</dt>
+            <dd class="col-sm-9">@Model.BirthDate.ToShortDateString()</dd>
+        </dl>
+        <a asp-action="Edit" asp-route-id="@Model.EmployeeId" class="btn btn-primary">Edit</a>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>

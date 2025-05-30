@@ -1,0 +1,84 @@
+﻿@model HomeSummaryViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2>Dashboard</h2>
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Resources</h5>
+                <p class="card-text display-6">@Model.TotalResources</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Active Resources</h5>
+                <p class="card-text display-6">@Model.TotalActiveResources</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Reservations</h5>
+                <p class="card-text display-6">@Model.TotalReservations</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Recent Reservations</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var res in Model.RecentReservations)
+            {
+                <tr>
+                    <td>@res.ReservationId</td>
+                    <td>@res.StartTime.ToString("g")</td>
+                    <td>@res.EndTime.ToString("g")</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <h4>Recent Resources</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Type ID</th>
+                    <th>Capacity</th>
+                    <th>Active</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var r in Model.RecentResources)
+            {
+                <tr>
+                    <td>@r.ResourceId</td>
+                    <td>@r.Name</td>
+                    <td>@r.ResourceTypeId</td>
+                    <td>@r.Capacity</td>
+                    <td>@(r.IsActive ? "Yes" : "No")</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
