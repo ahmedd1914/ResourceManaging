@@ -102,12 +102,18 @@ namespace ResourceManaging.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int? resourceId)
         {
             var model = new CreateReservationViewModel
             {
                 AvailableResources = await GetAvailableResourcesAsync()
             };
+
+            if (resourceId.HasValue)
+            {
+                model.SelectedResourceIds = new List<int> { resourceId.Value };
+            }
+
             return View(model);
         }
 

@@ -4,85 +4,224 @@
     ViewData["Title"] = "Create Reservation";
 }
 
-<h2>Create Reservation</h2>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            @if (ViewData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle"></i> @ViewData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle"></i> @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle"></i> @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
 
-@if (ViewData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @ViewData["ErrorMessage"]
-    </div>
-}
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @TempData["ErrorMessage"]
-    </div>
-}
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success" role="alert">
-        @TempData["SuccessMessage"]
-    </div>
-}
-
-<form asp-action="Create" method="post">
-    <div class="mb-3">
-        <label asp-for="StartTime" class="form-label"></label>
-        <input asp-for="StartTime" class="form-control" type="datetime-local" />
-        <span asp-validation-for="StartTime" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="EndTime" class="form-label"></label>
-        <input asp-for="EndTime" class="form-control" type="datetime-local" />
-        <span asp-validation-for="EndTime" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Purpose" class="form-label"></label>
-        <input asp-for="Purpose" class="form-control" />
-        <span asp-validation-for="Purpose" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Participants" class="form-label"></label>
-        <input asp-for="Participants" class="form-control" />
-        <span asp-validation-for="Participants" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Resources</label>
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    @foreach (var resource in Model.AvailableResources)
-                    {
-                        <div class="col-md-4 mb-3">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <div class="form-check">
-                                        <input type="checkbox" 
-                                               name="SelectedResourceIds" 
-                                               value="@resource.ResourceId" 
-                                               class="form-check-input" 
-                                               id="resource_@resource.ResourceId"
-                                               @(Model.SelectedResourceIds != null && Model.SelectedResourceIds.Contains(resource.ResourceId) ? "checked" : "") />
-                                        <label class="form-check-label" for="resource_@resource.ResourceId">
-                                            <h6 class="mb-1">@resource.Name</h6>
-                                            <small class="text-muted">
-                                                <i class="bi bi-people-fill"></i> Capacity: @resource.Capacity
-                                            </small>
-                                        </label>
-                                    </div>
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="bi bi-calendar-plus"></i> Create New Reservation
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="StartTime" class="form-label">
+                                        <i class="bi bi-clock"></i> Start Time
+                                    </label>
+                                    <input asp-for="StartTime" class="form-control" type="datetime-local" id="startTime" />
+                                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="EndTime" class="form-label">
+                                        <i class="bi bi-clock-history"></i> End Time
+                                    </label>
+                                    <input asp-for="EndTime" class="form-control" type="datetime-local" id="endTime" />
+                                    <span asp-validation-for="EndTime" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
-                    }
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Purpose" class="form-label">
+                                        <i class="bi bi-info-circle"></i> Purpose
+                                    </label>
+                                    <input asp-for="Purpose" class="form-control" placeholder="Enter reservation purpose" />
+                                    <span asp-validation-for="Purpose" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Participants" class="form-label">
+                                        <i class="bi bi-people"></i> Participants
+                                    </label>
+                                    <input asp-for="Participants" class="form-control" type="number" min="1" 
+                                           placeholder="Enter number of participants" />
+                                    <span asp-validation-for="Participants" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="bi bi-box-seam"></i> Available Resources
+                            </label>
+                            <div class="row g-3">
+                                @foreach (var resource in Model.AvailableResources)
+                                {
+                                    <div class="col-md-4">
+                                        <div class="card h-100 resource-card">
+                                            <div class="card-body">
+                                                <div class="form-check">
+                                                    <input type="checkbox" 
+                                                           name="SelectedResourceIds" 
+                                                           value="@resource.ResourceId" 
+                                                           class="form-check-input resource-checkbox" 
+                                                           id="resource_@resource.ResourceId"
+                                                           @(Model.SelectedResourceIds != null && Model.SelectedResourceIds.Contains(resource.ResourceId) ? "checked" : "") />
+                                                    <label class="form-check-label w-100" for="resource_@resource.ResourceId">
+                                                        <div class="d-flex align-items-center mb-2">
+                                                            <div class="resource-icon bg-primary text-white me-2">
+                                                                <i class="bi bi-box-seam"></i>
+                                                            </div>
+                                                            <h6 class="mb-0">@resource.Name</h6>
+                                                        </div>
+                                                        <div class="resource-details">
+                                                            <small class="text-muted d-block">
+                                                                <i class="bi bi-grid-3x3"></i> @resource.ResourceType?.Name
+                                                            </small>
+                                                            <small class="text-muted d-block">
+                                                                <i class="bi bi-people"></i> Capacity: @resource.Capacity
+                                                            </small>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <span asp-validation-for="SelectedResourceIds" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Create Reservation
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        <span asp-validation-for="SelectedResourceIds" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Create</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-</form>
+</div>
+
+<style>
+    .resource-card {
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+    }
+
+    .resource-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .resource-card .form-check {
+        margin: 0;
+    }
+
+    .resource-card .form-check-label {
+        cursor: pointer;
+    }
+
+    .resource-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .resource-details {
+        margin-top: 0.5rem;
+        padding-left: 2rem;
+    }
+
+    .resource-checkbox:checked + .form-check-label .resource-card {
+        border-color: var(--bs-primary);
+    }
+</style>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Set default datetime values
+        function setDefaultDateTime() {
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            // Format: YYYY-MM-DDThh:mm
+            const nowFormatted = now.toISOString().slice(0, 16);
+            const tomorrowFormatted = tomorrow.toISOString().slice(0, 16);
+            
+            // Set values for start and end time
+            const startTimeInput = document.getElementById('startTime');
+            const endTimeInput = document.getElementById('endTime');
+            
+            startTimeInput.value = nowFormatted;
+            endTimeInput.value = tomorrowFormatted;
+            
+            // Set minimum values
+            startTimeInput.min = nowFormatted;
+            endTimeInput.min = nowFormatted;
+        }
+
+        // Update end time minimum when start time changes
+        document.getElementById('startTime').addEventListener('change', function() {
+            const endTimeInput = document.getElementById('endTime');
+            endTimeInput.min = this.value;
+            
+            // If end time is before start time, update it
+            if (endTimeInput.value && endTimeInput.value < this.value) {
+                endTimeInput.value = this.value;
+            }
+        });
+
+        // Call on page load
+        setDefaultDateTime();
+
+        // Add click event to entire resource card
+        document.querySelectorAll('.resource-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (e.target.type !== 'checkbox') {
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
+                }
+            });
+        });
+    </script>
 }

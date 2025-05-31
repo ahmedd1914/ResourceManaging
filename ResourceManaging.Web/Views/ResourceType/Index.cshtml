@@ -4,31 +4,80 @@
     ViewData["Title"] = "Resource Types";
 }
 
-<h2>Resource Types</h2>
-<div class="mb-3">
-    <a asp-action="Create" class="btn btn-success">
-        <i class="bi bi-plus-circle"></i> Create Resource Type
-    </a>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-grid-3x3"></i> Resource Types</h2>
+        <a asp-action="Create" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Create Resource Type
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th><i class="bi bi-tag"></i> Name</th>
+                            <th><i class="bi bi-info-circle"></i> Description</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var type in Model.ResourceTypes)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="resource-type-icon bg-primary text-white me-2">
+                                        <i class="bi bi-grid-3x3"></i>
+                                    </div>
+                                    @type.Name
+                                </div>
+                            </td>
+                            <td>@type.Description</td>
+                            <td class="text-end">
+                                <div class="btn-group">
+                                    <a asp-action="Details" asp-route-id="@type.ResourceTypeId" 
+                                       class="btn btn-outline-info btn-sm"
+                                       data-bs-toggle="tooltip"
+                                       title="View Details">
+                                        <i class="bi bi-info-circle"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@type.ResourceTypeId" 
+                                       class="btn btn-outline-primary btn-sm"
+                                       data-bs-toggle="tooltip"
+                                       title="Edit Resource Type">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var type in Model.ResourceTypes)
-    {
-        <tr>
-            <td>@type.Name</td>
-            <td>@type.Description</td>
-            <td>
-                <a asp-action="Details" asp-route-id="@type.ResourceTypeId" class="btn btn-info btn-sm">Details</a>
-                <a asp-action="Edit" asp-route-id="@type.ResourceTypeId" class="btn btn-primary btn-sm">Edit</a>
-            </td>
-        </tr>
+
+<style>
+    .resource-type-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-    </tbody>
-</table>
+</style>
+
+@section Scripts {
+    <script>
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+}

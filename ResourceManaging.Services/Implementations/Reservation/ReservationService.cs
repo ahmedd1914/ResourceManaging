@@ -223,6 +223,7 @@ namespace ResourceManaging.Services.Implementations.Reservation
                 ReservationId = reservationId
             };
             update.UpdateEndTime(DateTime.Now);
+            update.UpdateCancelledStatus(true);
             return await _reservationRepository.UpdateAsync(update);
         }
     }

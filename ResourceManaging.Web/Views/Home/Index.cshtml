@@ -33,52 +33,176 @@
 </div>
 
 <div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Active Sessions</h4>
+                <a asp-controller="Reservation" asp-action="Create" class="btn btn-success btn-sm">
+                    <i class="bi bi-plus-circle"></i> New Reservation
+                </a>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Purpose</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var res in Model.RecentReservations.Where(r => r.EndTime > DateTime.Now && !r.IsCancelled))
+                    {
+                        <tr>
+                            <td>@res.ReservationId</td>
+                            <td>@res.StartTime.ToString("g")</td>
+                            <td>@res.EndTime.ToString("g")</td>
+                            <td>@res.Purpose</td>
+                            <td>
+                                <span class="badge bg-success">
+                                    <i class="bi bi-play-circle"></i> Active
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a asp-controller="Reservation" asp-action="Details" asp-route-id="@res.ReservationId" class="btn btn-info btn-sm">
+                                        <i class="bi bi-info-circle"></i>
+                                    </a>
+                                    <a asp-controller="Reservation" asp-action="Edit" asp-route-id="@res.ReservationId" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form asp-controller="Reservation" asp-action="ReleaseEarly" asp-route-id="@res.ReservationId" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Are you sure you want to release this reservation early?')">
+                                            <i class="bi bi-stop-circle"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
     <div class="col-md-6">
-        <h4>Recent Reservations</h4>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                </tr>
-            </thead>
-            <tbody>
-            @foreach (var res in Model.RecentReservations)
-            {
-                <tr>
-                    <td>@res.ReservationId</td>
-                    <td>@res.StartTime.ToString("g")</td>
-                    <td>@res.EndTime.ToString("g")</td>
-                </tr>
-            }
-            </tbody>
-        </table>
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Completed Sessions</h4>
+                <a asp-controller="Reservation" asp-action="Index" class="btn btn-primary btn-sm">
+                    <i class="bi bi-arrow-right"></i> View All Reservations
+                </a>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Purpose</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var res in Model.RecentReservations.Where(r => r.EndTime <= DateTime.Now && !r.IsCancelled))
+                    {
+                        <tr>
+                            <td>@res.ReservationId</td>
+                            <td>@res.StartTime.ToString("g")</td>
+                            <td>@res.EndTime.ToString("g")</td>
+                            <td>@res.Purpose</td>
+                            <td>
+                                <span class="badge bg-secondary">
+                                    <i class="bi bi-check-circle"></i> Completed
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <div class="col-md-6">
-        <h4>Recent Resources</h4>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Type ID</th>
-                    <th>Capacity</th>
-                    <th>Active</th>
-                </tr>
-            </thead>
-            <tbody>
-            @foreach (var r in Model.RecentResources)
-            {
-                <tr>
-                    <td>@r.ResourceId</td>
-                    <td>@r.Name</td>
-                    <td>@r.ResourceTypeId</td>
-                    <td>@r.Capacity</td>
-                    <td>@(r.IsActive ? "Yes" : "No")</td>
-                </tr>
-            }
-            </tbody>
-        </table>
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Cancelled Sessions</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Purpose</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var res in Model.RecentReservations.Where(r => r.IsCancelled))
+                    {
+                        <tr>
+                            <td>@res.ReservationId</td>
+                            <td>@res.StartTime.ToString("g")</td>
+                            <td>@res.EndTime.ToString("g")</td>
+                            <td>@res.Purpose</td>
+                            <td>
+                                <span class="badge bg-danger">
+                                    <i class="bi bi-x-circle"></i> Cancelled
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Recent Resources</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Type ID</th>
+                            <th>Capacity</th>
+                            <th>Active</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var r in Model.RecentResources)
+                    {
+                        <tr>
+                            <td>@r.ResourceId</td>
+                            <td>@r.Name</td>
+                            <td>@r.ResourceTypeId</td>
+                            <td>@r.Capacity</td>
+                            <td>
+                                <span class="badge @(r.IsActive ? "bg-success" : "bg-danger")">
+                                    @(r.IsActive ? "Yes" : "No")
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
